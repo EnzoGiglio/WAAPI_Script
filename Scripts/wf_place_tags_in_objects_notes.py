@@ -17,10 +17,9 @@ tk.withdraw()
 
 try:
 
-# Récuère tout les objets spécifiés dans l'Actor-Mixer Hierarchy et les stocke dans la liste amhObjects 
-
     with WaapiClient() as client:
-        
+
+       # Récuère tout les objets spécifiés dans l'Actor-Mixer Hierarchy et les stocke dans la liste amhObjects. 
         amhObjects = []
         for guid, name in walk_wproj(client,
                                      start_guids_or_paths='\\Actor-Mixer Hierarchy',
@@ -28,8 +27,7 @@ try:
                                      types=['ActorMixer', 'RandomSequenceContainer', 'SwitchContainer', 'BlendContainer']):
             amhObjects.append([guid, name])
 
-# Récuère tout les objets spécifiés dans l'Interactive Music Hierarchy et les stocke dans la liste imhObjects 
-
+        # Récuère tout les objets spécifiés dans l'Interactive Music Hierarchy et les stocke dans la liste imhObjects 
         imhObjects = []
         for guid, name in walk_wproj(client,
                                      start_guids_or_paths='\\Interactive Music Hierarchy',
@@ -37,30 +35,27 @@ try:
                                      types=['MusicSwitchContainer', 'MusicPlaylistContainer', 'MusicSegment', 'MusicTrack']):
             imhObjects.append([guid, name])
 
-# Récupère le nom de tout les fichiers CSV présents dans le dossier Workflow et les stocke dans la liste csvFilesTitles
+        # Récupère le nom de tout les fichiers CSV présents dans le dossier Workflow et les stocke dans la liste csvFilesTitles
+        csvFilesTitles = []
+        for filename in csvFiles:
+            title = os.path.basename(filename)
+            csvFilesTitles.append(title)
 
-    csvFilesTitles = []
-    for filename in csvFiles:
-        title = os.path.basename(filename)
-        csvFilesTitles.append(title)
+        # Recherche de match entre les noms contenus dans amhObjects et csvFilesTitles et les stocke dans la liste foundObjects 
+        foundObjects = []
+        for guid, name in amhObjects:
+            for filename in csvFilesTitles:
+                if name in filename:
+                    print("Matchs found: " + name)
+                    foundObjects.append((guid, name)) ### PB ne trouve pas 2D dans FOL_2D ###
 
-# Recherche de match entre les noms contenus dans amhObjects et csvFilesTitles et les stocke dans la liste foundObjects
-    
-    foundObjects = []
-    for guid, name in amhObjects:
-        for filename in csvFilesTitles:
-            if name in filename:
-                print("Matchs found: " + name)
-                foundObjects.append((guid, name)) ### PB ne trouve pas 2D dans FOL_2D ###
-
-# Quand match trouvé, reporte les noms des csvFilesTitles dans les notes des objets wwise correspondant
-
-    for guid, name in foundObjects:
-        client.call("ak.wwise.core.object.setNotes", {
-                'object': guid,
-                'value': "[toto]"
-                })  
-        print('cestok')
+        # Quand match trouvé, reporte les noms des csvFilesTitles dans les notes des objets wwise correspondant
+        for guid, name in foundObjects:
+            client.call("ak.wwise.core.object.setNotes", {
+                    'object': guid,
+                    'value': "[toto]"
+                    })  
+            print('cestok')
 
     
 except CannotConnectToWaapiException:
