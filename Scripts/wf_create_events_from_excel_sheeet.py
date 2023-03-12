@@ -3,7 +3,7 @@ if __name__ != '__main__':
     exit(1)
 
 import tkinter
-from tkinter.messagebox import showinfo, showerror
+from tkinter.messagebox import showinfo, showerror, showwarning
 from waapi import WaapiClient, CannotConnectToWaapiException
 from waapi_helpers import *
 from helpers import *
@@ -39,12 +39,14 @@ try:
                                         properties=['name'],
                                         types=['Event'])]
  
-        # Compare names of events to create with already existing events in Wwise  
+        # Compare names of events to create with already existing events in Wwise and create a list with it
+        matchingEvents = []
         for eventToBeCreated in eventsToCreateInWwise:
             if eventToBeCreated in alreadyExistingEvents:
-
-                #Print in a dedicated window interface
-                pprint("Events already exists, will merge:" + eventToBeCreated)
+                matchingEvents.append(eventToBeCreated)
+                
+        #Print in a dedicated window interface        
+        showwarning("Warning", "Events already exists, will merge: " '\n'.join(matchingEvents))
 
         # Create events in Wwise from names in eventsToCreateInWwise list
         for eventToBeCreated in eventsToCreateInWwise:
@@ -63,7 +65,7 @@ try:
             )
         
         # Print in a dedicated window interface
-        pprint("Events has been created inside WAAPI folder in Default Work Unit.")          
+        showinfo("Result", "Events were created inside WAAPI folder in Default Work Unit.")          
 
 except CannotConnectToWaapiException:
     showerror('Error', 'Could not establish the WAAPI connection. Is the Wwise Authoring Tool running?')
