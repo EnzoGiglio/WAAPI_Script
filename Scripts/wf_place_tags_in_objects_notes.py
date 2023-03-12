@@ -53,7 +53,7 @@ try:
         for guid, name in foundObjects:
             client.call("ak.wwise.core.object.setNotes", {
                     'object': guid,
-                    'value': "[toto]"
+                    'value': name
                     })  
             print('cestok')
 
