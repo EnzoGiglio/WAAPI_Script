@@ -3,7 +3,7 @@ if __name__ != '__main__':
     exit(1)
 
 import tkinter
-from tkinter.messagebox import showinfo, showerror
+from tkinter.messagebox import showinfo, showerror, showwarning
 from waapi import WaapiClient, CannotConnectToWaapiException
 from waapi_helpers import *
 from helpers import *
@@ -13,7 +13,6 @@ csvFiles = glob.glob('C:/Users/enzog/Desktop/WAAPI_Scripts/Workflow_CSV_Tags/*.c
 
 tk = tkinter.Tk()
 tk.withdraw()
-
 
 try:
 
@@ -55,8 +54,8 @@ try:
                     'object': guid,
                     'value': name
                     })  
-            print('cestok')
-
+            
+        showinfo('Status', "Tags have been automatically applied through the hierarchy.")
     
 except CannotConnectToWaapiException:
     showerror('Error', 'Could not establish the WAAPI connection. Is the Wwise Authoring Tool running?')

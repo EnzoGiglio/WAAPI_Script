@@ -9,7 +9,6 @@ from waapi_helpers import *
 from helpers import *
 
 import pandas as pd
-from pprint import pprint 
 
 tk = tkinter.Tk()
 tk.withdraw()
